@@ -1,0 +1,101 @@
+#include <conio.h>
+#include <stdio.h>
+
+struct usel
+{
+    int key;
+    usel* next;
+};
+struct sp
+{
+    usel* head;
+    int n;
+    void push(int k)
+    {
+        usel* p;
+        p = new usel;
+        p->key = k;
+        p->next = head->next;
+        head->next = p;
+        n++;
+    }
+    int pop()
+    {
+        usel* p; int k;
+        if (empty()) return -1;
+        p = head->next;
+        head->next = p->next;
+        k = p->key;
+        delete p;
+        n--;
+        return k;
+    }
+    bool empty()
+    {
+        if (head->next) return false;
+        return true;
+    }
+    void print()
+    {
+        usel* p;
+        if (head->next)
+        {
+            p = head->next;
+            while (p->next)
+            {
+                printf("%d ", p->key);
+                p = p->next;
+            }
+            printf("%d ", p->key);
+        }
+    }
+    sp()           
+    {
+        head = new usel;
+        head->next = 0;
+        n = 0;
+    }
+};
+
+void vyvod(sp* kernel)            
+{
+    int i;
+    for (i = 0;i < 3;i++)
+    {
+        printf(i + 1);
+        kernel[i].print();
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void pyramid(sp* kernel, int n, int from, int to, int help)
+{
+    int i;
+    if (n == 1) kernel[to].push(kernel[from].pop());
+    else
+    {
+        pyramid(kernel, n - 1, from, help, to);
+        vyvod(kernel);
+        pyramid(kernel, 1, from, to, help);
+        vyvod(kernel);
+        pyramid(kernel, n - 1, help, to, from);
+    }
+}
+
+void main()
+{
+    sp kernel[3]; int i, a, j, n;
+    printf("Vvedite vysotu bashen: "); scanf("%d", &n);
+    printf("Vvedite elementy I bashni: ");
+    for (j = 0;j < n;j++)
+    {
+        scanf("%d", &a);
+        kernel[0].push(a);
+    }
+    printf("\n");
+    vyvod(kernel);
+    pyramid(kernel, n, 0, 2, 1);
+    vyvod(kernel);
+    getch();
+}
